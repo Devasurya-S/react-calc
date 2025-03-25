@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./components/Button";
 import { btnData } from "./constants/btnData.js";
 
@@ -16,21 +16,27 @@ const App = () => {
   };
 
   const handleResultClick = () => {
+    let crntExpr = calc.expr;
+    if (!crntExpr) return;
+    while (/[+\-*/]$/.test(crntExpr)) {
+      crntExpr = crntExpr.slice(0, -1);
+    }
     try {
-      let result = Function(`"use strict"; return (${calc.expr})`)();
+      let result = Function(`"use strict"; return (${crntExpr})`)();
       if (typeof result === "number") {
-        result = parseFloat(result.toFixed(10));
+        result = parseFloat(result.toFixed(10)); // Fix floating point precision
       }
-      setCalc({ res: result, expr: "", operation: false });
+      setCalc({ res: result, expr: crntExpr, operation: false });
     } catch (error) {
-      setCalc({ res: "Error", expr: "", operation: false });
+      setCalc({ res: "Error", expr: crntExpr, operation: false });
     }
   };
 
   const handleDelClick = () => {
     if (!calc.expr) return; // Do nothing if expr is already null or empty
     const updatedExpr = calc.expr.slice(0, -1);
-    setCalc({ ...calc, expr: updatedExpr || null, operation: true });
+    console.log(updatedExpr);
+    setCalc({ ...calc, operation: true, expr: updatedExpr || null });
   };
 
   const handleNumClick = (e) => {
