@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Button from "./components/Button";
-import { btnData } from "./constants/btnData.js";
 
 const App = () => {
   const [calc, setCalc] = useState({
@@ -18,14 +17,20 @@ const App = () => {
   const handleResultClick = () => {
     let crntExpr = calc.expr;
     if (!crntExpr) return;
-    while (/[+\-*/]$/.test(crntExpr)) {
-      crntExpr = crntExpr.slice(0, -1);
-    }
+
+    // Remove trailing operators until a valid number is at the end
+    crntExpr = crntExpr.replace(/[+\-*/]+$/, "");
+
     try {
       let result = Function(`"use strict"; return (${crntExpr})`)();
-      if (typeof result === "number") {
-        result = parseFloat(result.toFixed(10)); // Fix floating point precision
+
+      // Fix floating point precision
+      if (typeof result === "number" && !isNaN(result) && isFinite(result)) {
+        result = parseFloat(result.toFixed(10));
+      } else {
+        throw new Error("Invalid calculation");
       }
+
       setCalc({ res: result, expr: crntExpr, operation: false });
     } catch (error) {
       setCalc({ res: "Error", expr: crntExpr, operation: false });
@@ -35,7 +40,6 @@ const App = () => {
   const handleDelClick = () => {
     if (!calc.expr) return; // Do nothing if expr is already null or empty
     const updatedExpr = calc.expr.slice(0, -1);
-    console.log(updatedExpr);
     setCalc({ ...calc, operation: true, expr: updatedExpr || null });
   };
 
@@ -51,6 +55,27 @@ const App = () => {
     }
   };
 
+  const btnData = [
+    { data: "7", type: "primary", fn: handleNumClick },
+    { data: "8", type: "primary", fn: handleNumClick },
+    { data: "9", type: "primary", fn: handleNumClick },
+    { data: "DEL", type: "special", fn: handleDelClick },
+    { data: "4", type: "primary", fn: handleNumClick },
+    { data: "5", type: "primary", fn: handleNumClick },
+    { data: "6", type: "primary", fn: handleNumClick },
+    { data: "+", type: "primary", fn: handleNumClick },
+    { data: "1", type: "primary", fn: handleNumClick },
+    { data: "2", type: "primary", fn: handleNumClick },
+    { data: "3", type: "primary", fn: handleNumClick },
+    { data: "-", type: "primary", fn: handleNumClick },
+    { data: ".", type: "primary", fn: handleNumClick },
+    { data: "0", type: "primary", fn: handleNumClick },
+    { data: "/", type: "primary", fn: handleNumClick },
+    { data: "*", type: "primary", fn: handleNumClick },
+    { data: "RESET", type: "secondary", fn: reset },
+    { data: "=", type: "tertiary", fn: handleResultClick },
+  ];
+
   return (
     <div className="flex h-screen flex-wrap items-center justify-center">
       <div className="md:w-xl bg-primary flex flex-col gap-4 p-2">
@@ -62,7 +87,7 @@ const App = () => {
           {btnData.map((btn, index) => (
             <Button
               key={index}
-              handleClick={eval(btn.fn)}
+              handleClick={btn.fn}
               data={btn.data}
               btnType={btn.type}
             />
