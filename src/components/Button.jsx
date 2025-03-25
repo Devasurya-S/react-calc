@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 const Button = (props) => {
-  const { data, btnType } = props;
+  const { data, btnType, handleClick } = props;
   const btnClasses = clsx(
     "w-full border-b-5 p-2 sm:p-3 font-bold text-3xl rounded-lg transition-all duration-300 ease-in-out",
     {
@@ -20,7 +20,7 @@ const Button = (props) => {
 
   return (
     <div className={btnWdith}>
-      <button className={btnClasses}>{data}</button>
+      <button className={btnClasses} onClick={handleClick} value={data}>{data}</button>
     </div>
   );
 };
