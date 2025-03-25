@@ -1,33 +1,43 @@
 import React, { useState } from "react";
 import Button from "./components/Button";
+import { btnData } from "./constants/btnData.js";
 
 const App = () => {
   const [calc, setCalc] = useState({
     res: null,
     expr: null,
-    operation: true
+    operation: true,
   });
+
+  const MAX_LENGTH = 20;
 
   const reset = () => {
     setCalc({ ...calc, res: null, expr: null, operation: true });
   };
 
   const handleResultClick = () => {
-    const result = eval(`(${calc.expr})`);
-    setCalc({...calc, res:result, operation: false})
+    try {
+      let result = Function(`"use strict"; return (${calc.expr})`)();
+      if (typeof result === "number") {
+        result = parseFloat(result.toFixed(10));
+      }
+      setCalc({ res: result, expr: "", operation: false });
+    } catch (error) {
+      setCalc({ res: "Error", expr: "", operation: false });
+    }
   };
 
   const handleDelClick = () => {
     if (!calc.expr) return; // Do nothing if expr is already null or empty
     const updatedExpr = calc.expr.slice(0, -1);
     setCalc({ ...calc, expr: updatedExpr || null, operation: true });
-  }
+  };
 
   const handleNumClick = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    const crntExpr = calc.expr;
-
+    const crntExpr = calc.expr || "";
+    if (crntExpr.length >= MAX_LENGTH) return;
     if (crntExpr === null) {
       setCalc({ ...calc, expr: value });
     } else {
@@ -43,24 +53,14 @@ const App = () => {
           {calc.operation ? calc.expr : calc.res}
         </div>
         <div className="bg-secondary flex flex-wrap rounded-lg p-1 sm:p-3">
-          <Button handleClick={handleNumClick} data="7" btnType="primary" />
-          <Button handleClick={handleNumClick} data="8" btnType="primary" />
-          <Button handleClick={handleNumClick} data="9" btnType="primary" />
-          <Button handleClick={handleDelClick} data="DEL" btnType="special" />
-          <Button handleClick={handleNumClick} data="4" btnType="primary" />
-          <Button handleClick={handleNumClick} data="5" btnType="primary" />
-          <Button handleClick={handleNumClick} data="6" btnType="primary" />
-          <Button handleClick={handleNumClick} data="+" btnType="primary" />
-          <Button handleClick={handleNumClick} data="1" btnType="primary" />
-          <Button handleClick={handleNumClick} data="2" btnType="primary" />
-          <Button handleClick={handleNumClick} data="3" btnType="primary" />
-          <Button handleClick={handleNumClick} data="-" btnType="primary" />
-          <Button handleClick={handleNumClick} data="." btnType="primary" />
-          <Button handleClick={handleNumClick} data="0" btnType="primary" />
-          <Button handleClick={handleNumClick} data="/" btnType="primary" />
-          <Button handleClick={handleNumClick} data="*" btnType="primary" />
-          <Button handleClick={reset} data="RESET" btnType="secondary" />
-          <Button handleClick={handleResultClick} data="=" btnType="teritiary" />
+          {btnData.map((btn, index) => (
+            <Button
+              key={index}
+              handleClick={eval(btn.fn)}
+              data={btn.data}
+              btnType={btn.type}
+            />
+          ))}
         </div>
       </div>
     </div>
