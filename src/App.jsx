@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import Button from "./components/Button";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex h-screen flex-wrap items-center justify-center">
+      <div className="md:w-xl bg-primary flex flex-col gap-4 p-2">
+        <div className="text-xl font-bold text-white">calc</div>
+        <div className="bg-screen rounded-lg p-4 py-5 text-end text-3xl font-bold text-white">
+          399,981
+        </div>
+        <div className="bg-secondary flex flex-wrap rounded-lg p-1 sm:p-3">
+          <Button data="7" btnType="primary" />
+          <Button data="8" btnType="primary" />
+          <Button data="9" btnType="primary" />
+          <Button data="DEL" btnType="special" />
+          <Button data="4" btnType="primary" />
+          <Button data="5" btnType="primary" />
+          <Button data="6" btnType="primary" />
+          <Button data="+" btnType="primary" />
+          <Button data="1" btnType="primary" />
+          <Button data="2" btnType="primary" />
+          <Button data="3" btnType="primary" />
+          <Button data="-" btnType="primary" />
+          <Button data="." btnType="primary" />
+          <Button data="0" btnType="primary" />
+          <Button data="/" btnType="primary" />
+          <Button data="x" btnType="primary" />
+          <Button data="RESET" btnType="secondary" />
+          <Button data="=" btnType="teritiary" />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;

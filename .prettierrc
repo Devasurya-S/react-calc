@@ -1,0 +1,4 @@
+{
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./react-calc/src/index.css"
+}
