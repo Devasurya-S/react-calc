@@ -18,13 +18,11 @@ const App = () => {
     let crntExpr = calc.expr;
     if (!crntExpr) return;
 
-    // Remove trailing operators until a valid number is at the end
     crntExpr = crntExpr.replace(/[+\-*/]+$/, "");
 
     try {
       let result = Function(`"use strict"; return (${crntExpr})`)();
 
-      // Fix floating point precision
       if (typeof result === "number" && !isNaN(result) && isFinite(result)) {
         result = parseFloat(result.toFixed(10));
       } else {
@@ -38,7 +36,7 @@ const App = () => {
   };
 
   const handleDelClick = () => {
-    if (!calc.expr) return; // Do nothing if expr is already null or empty
+    if (!calc.expr) return;
     const updatedExpr = calc.expr.slice(0, -1);
     setCalc({ ...calc, operation: true, expr: updatedExpr || null });
   };

@@ -15,8 +15,8 @@ const Button = (props) => {
     },
   );
   const btnWdith = clsx({
-    "basis-1/4 p-2": btnType == "primary" || btnType == "special",
-    "basis-1/2 p-2": btnType == "secondary" || btnType == "tertiary",
+    "basis-1/4 p-1 sm:p-2": btnType == "primary" || btnType == "special",
+    "basis-1/2 p-1 sm:p-2": btnType == "secondary" || btnType == "tertiary",
   });
 
   return (
